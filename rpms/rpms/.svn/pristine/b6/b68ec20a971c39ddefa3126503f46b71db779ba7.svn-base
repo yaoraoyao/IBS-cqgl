@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.mapper.RepairOrderItemMapper">
+    <!--查询所有维修单-->
+    <select id="findAll" resultType="RepairOrderItem">
+        select * from t_repairorderitem
+    </select>
+
+    <!--T findOne(Serializable id);-->
+    <select id="findOne" parameterType="long" resultType="RepairOrderItem">
+        select * from t_repairorderitem where id = #{id}
+    </select>
+
+    <!--通过维修单号查询维修明细-->
+    <select id="findByMainId" parameterType="long" resultType="RepairOrderItem">
+        select * from t_repairorderitem where mainid = #{mainid}
+    </select>
+
+    <!--void save(T t);-->
+    <insert id="save" parameterType="RepairOrderItem">
+        insert into t_repairorderitem(id,mainid,optid,pid,amt1,amt2,num,totalamt)
+          values (#{id},#{mainid},#{opid},#{pid},#{amt1},#{amt2},#{num},#{totalamt})
+    </insert>
+
+    <!--void delete(Serializable id);-->
+    <delete id="delete" parameterType="long" >
+        delete from t_repairorderitem where id=#{id}
+    </delete>
+
+    <!--void update(T t);-->
+    <update id="update" parameterType="RepairOrderItem">
+        update t_repairorderitem set mainid=${mainid},optid=${optid},
+          pid=${pid},amt1=${amt1},amt2=${amt2},num=${num},totalamt=${totalamt} where id=#{id}
+    </update>
+
+    <!--List<T> query(BaseQuery baseQuery);-->
+    <select id="query" parameterType="RepairOrderItemQuery" resultType="RepairOrderItem">
+        select * from t_repairorderitem
+        <include refid="whereSql"/>
+    </select>
+    <sql id="whereSql">
+        <where>
+            <if test="keyword != null and keyword != '' ">
+                and name LIKE concat('%',#{keyword},'%')
+            </if>
+        </where>
+    </sql>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.mapper.MenuMapper">
+    <!--通过员工id查询-->
+    <select id="findMenuByEmployeeId" parameterType="long" resultType="Menu" >
+      select  m.*  from  t_menu m
+          LEFT JOIN t_role_menu rm on m.id=rm.menu_id
+          LEFT JOIN t_employee_role er on rm.role_id=er.role_id
+          where er.employee_id=#{id}
+    </select>
+
+    <!--List<t_menu> findAll();-->
+    <select id="findAll" resultType="Menu">
+        SELECT * FROM t_menu
+    </select>
+
+    <!--  t_menu findOne(Long id);-->
+    <select id="findOne" parameterType="long" resultType="Menu">
+        SELECT * FROM t_menu WHERE id=#{id}
+    </select>
+
+    <!--void save(t_menu t_menu);
+    -->
+    <insert id="save" parameterType="Menu">
+        INSERT INTO t_menu (label,url,icon,parent_id) VALUES (#{label},#{url},#{icon},#{parent_id})
+    </insert>
+
+    <!--void delete(Long id);-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_menu WHERE id=#{id}
+    </delete>
+
+    <!--void update(t_menu t_menu);-->
+    <update id="update" parameterType="Menu">
+        UPDATE t_menu SET label=#{label},url=#{url},icon=#{icon}, parent_id=#{parent_id} WHERE id=#{id}
+    </update>
+
+
+    <!--/*不分页查询*/
+    List<t_menu> query(t_menuQuery t_menuQuery);-->
+    <select id="query" parameterType="MenuQuery" resultType="Menu">
+        SELECT * FROM t_menu
+        <include refid="wheresql"/>
+    </select>
+    <sql id="wheresql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                AND (label LIKE concat('%',#{keyword},'%'))
+            </if>
+        </where>
+    </sql>
+
+</mapper>

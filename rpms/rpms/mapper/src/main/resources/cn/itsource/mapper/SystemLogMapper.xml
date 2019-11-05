@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.mapper.SystemLogMapper">
+
+    <!--T findOne(Serializable id);-->
+    <select id="findOne" parameterType="long" resultType="SystemLog">
+        select * from t_systemlog where id = #{id}
+    </select>
+
+    <!--void save(T t);-->
+    <insert id="save" parameterType="SystemLog">
+        insert into t_systemlog(id,opuser,optime,opip,function,params)
+          values (#{id},#{opUser},#{opTime},#{opIp},#{function},#{params})
+    </insert>
+
+
+    <!--查询所有日志-->
+    <select id="findAll" resultType="SystemLog">
+        select * from t_systemlog
+    </select>
+
+    <!--List<T> query(BaseQuery baseQuery);-->
+    <select id="query" resultType="SystemLog" parameterType="SystemLogQuery">
+        select * from t_systemlog
+        <trim prefix="where" prefixOverrides="or">
+            <if test="keyword!=null and keyword!=''">
+                and opuser like "%" #{keyword} "%"
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                and function like "%" #{keyword} "%"
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                and opip like "%" #{keyword} "%"
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                and optime like "%" #{keyword} "%"
+            </if>
+        </trim>
+    </select>
+</mapper>

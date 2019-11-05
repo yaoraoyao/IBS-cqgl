@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间-->
+<mapper namespace="cn.itsource.mapper.PayWayMapper">
+    <!--List<t_employee> findAll();-->
+    <select id="findAll" resultType="PayWay">
+        SELECT * FROM t_payway
+    </select>
+
+  <!--  t_employee findOne(Long id);-->
+    <select id="findOne" parameterType="long" resultType="PayWay">
+        SELECT * FROM t_payway WHERE id=#{id}
+    </select>
+
+    <!--void save(t_employee t_employee);-->
+    <insert id="save" parameterType="PayWay">
+      INSERT INTO t_payway (way) VALUES (#{way})
+    </insert>
+
+    <!--void delete(Long id);-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_payway WHERE id=#{id}
+    </delete>
+
+    <!--void update(t_employee t_employee);-->
+    <update id="update" parameterType="PayWay">
+       UPDATE t_payway SET way=#{way} WHERE id=#{id}
+    </update>
+
+
+    <!--/*不分页查询*/
+    List<t_employee> query(t_employeeQuery t_employeeQuery);-->
+    <select id="query" parameterType="PayWay" resultType="PayWay">
+        SELECT * FROM t_payway
+        <include refid="wheresql"/>
+    </select>
+    <sql id="wheresql">
+        <where>
+          <if test="keyword!=null and key!=''">
+             AND (name LIKE concat('%',#{keyword},'%'))
+          </if>
+        </where>
+    </sql>
+
+
+</mapper>

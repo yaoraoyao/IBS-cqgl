@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--shiro核心对象配置-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!--set方法注入自定义Realm-->
+        <property name="realm" ref="loginReanlm"/>
+    </bean>
+    <bean id="loginReanlm" class="cn.itsource.shiro.LoginRealm">
+        <property name="name" value="jdbcRealm"/>
+        <!--配置加密规则-->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+                <property name="hashIterations" value="10"/>
+            </bean>
+        </property>
+    </bean>
+    <!--一下三个bean标签，配置可以使用注解方式来实现权限认证-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <!--shiro核心拦截器-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!--设置登录页面路径-->
+        <property name="loginUrl" value="/login"/>
+        <!--登录成功路径-->
+        <property name="successUrl" value="/index"/>
+        <!--访问某些资源无权限时跳转路径；重定向：redirect-->
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <!--配置哪些资源不需要权限就可以访问，哪些需要登录才能访问-->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
+        <!--直接配置法
+            <value>
+             /favicon.ico = anon
+             /**/*.png = anon
+             /**/*.jpg = anon
+             /**/*.css = anon
+             /**/*.js = anon
+             /login.jsp = anon
+             /login.do = anon
+             /*.jar = anon
+             /s/employee.jsp = perms[employee:*]
+             # 除此以外的都需要登录才能访问:
+             /** = authc
+         </value>-->
+        <property name="filters" ref="shiroFilterMap"/>
+    </bean>
+    <!--实例工厂配置模式-->
+    <bean id="filterChainDefinitionMapFactory" class="cn.itsource.shiro.FilterChainDefinitionMapFactory"/>
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapFactory"
+          factory-method="buildFilterChanDefinitionMap"/>
+    <bean id="shiroFilterMapFactory" class="cn.itsource.shiro.ShiroFiltersMapFactory"/>
+    <bean id="shiroFilterMap" factory-bean="shiroFilterMapFactory" factory-method="buildShiroFiltersMap"/>
+</beans>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.mapper.PermissionMapper">
+    <!--查询所有维修单-->
+    <select id="findAll" resultType="Permission">
+        select * from t_permission
+    </select>
+
+    <!--T findOne(Serializable id);-->
+    <select id="findOne" parameterType="long" resultType="Permission">
+        select * from t_permission where id = #{id}
+    </select>
+
+    <!--void save(T department);-->
+    <insert id="save" parameterType="Permission">
+        insert into t_permission(name,resource,sn,menu_id)
+          values (#{name},#{resource},#{sn},#{menu_id})
+    </insert>
+
+    <!--void delete(Serializable id);-->
+    <delete id="delete" parameterType="long" >
+        delete from t_permission where id=#{id}
+    </delete>
+
+    <!--void update(T t);-->
+    <update id="update" parameterType="Permission">
+        update t_permission set name=#{name},resource=#{resource},sn=#{sn},menu_id=#{menu_id} where id=#{id}
+    </update>
+
+    <!--通过用户id查询当前用户拥有的权限-->
+    <select id="findPermissionByEmployeeId" parameterType="long" resultType="Permission">
+        select r.`name`,p.id, p.`name`,p.resource ,p.sn,p.menu_id from t_permission p
+            LEFT JOIN t_role_permission rp ON p.id=rp.permission_id
+            left join t_role r on rp.role_id=r.id
+            left join t_employee_role er on r.id = er.role_id
+            where er.employee_id=#{id}
+    </select>
+
+    <select id="query" parameterType="PermissionQuery" resultType="Permission">
+        select * from t_permission
+        <include refid="whereSql"/>
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                and  ( name like  concat('%',#{keyword},'%'))
+            </if>
+        </where>
+    </sql>
+
+</mapper>

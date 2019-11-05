@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    ">
+    <!-- 扫描controller部分的包 -->
+    <!-- @Component组件, @Repository持久层, @Service业务逻辑层, and @Controller控制器 -->
+    <context:component-scan base-package="cn.it.controller" />
+    <!-- 对静态资源进行放行 -->
+    <mvc:default-servlet-handler />
+    <!-- 添加mvc对@RequestMapping等注解的支持 -->
+    <mvc:annotation-driven />
+    <context:annotation-config/>
+
+    <!-- ViewResolver 视图解析器 (struts2视图类型类似) -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 设置视图路径的前后缀，该配置可以让我们写视图路径的时候更简单。 -->
+        <!-- 希望跳转jsp是[/WEB-INF/views/前缀][xxx变量][.jsp后缀] -->
+        <!-- * @see #setPrefix -->
+        <property name="prefix" value="/WEB-INF/views/" />
+        <!-- * @see #setSuffix -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 错误：提示告诉开发者你没有配置文件上传解析器。 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为1MB -->
+        <property name="maxUploadSize">
+            <value>1048576</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+    <!-- 扫描easypoi中所有的view -->
+    <context:component-scan base-package="cn.afterturn.easypoi.view" />
+    <!-- Bean解析器,级别高于默认解析器,寻找bean对象进行二次处理 -->
+    <bean id="beanNameViewResolver"
+          class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0">
+    </bean>
+
+</beans>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.mapper.RepairOrderMapper">
+    <!--查询所有维修单-->
+    <select id="findAll" resultType="RepairOrder">
+        select * from t_repairorder
+    </select>
+
+    <!--T findOne(Serializable id);-->
+    <select id="findOne" parameterType="long" resultType="RepairOrder">
+        select * from t_repairorder where id = #{id}
+    </select>
+    <!--通过维修单查询维修明细-->
+    <select id="findItemsById" parameterType="long" resultType="RepairOrderItem">
+        SELECT * FROM t_repairorderitem WHERE mainid = #{mainid}
+    </select>
+
+    <!--void save(T department);-->
+    <insert id="save" parameterType="RepairOrder">
+        insert into t_repairorder(id,customer,carnum,createtime,status,opt_id,address)
+          values (#{id},#{customer},#{carnum},#{createtime},#{status},#{optId.id},#{address})
+    </insert>
+
+    <!--void delete(Serializable id);-->
+    <delete id="delete" parameterType="long" >
+        delete from t_repairorder where id=#{id}
+    </delete>
+
+    <!--void update(T t);-->
+    <update id="update" parameterType="RepairOrder">
+        update t_repairorder set customer=#{customer},carnum=#{carnum},
+          createtime=#{createtime},status=#{status},opt_id=#{optId.id},address=#{address} where id=#{id}
+</update>
+
+    <!--List<T> query(BaseQuery baseQuery);-->
+    <select id="query" parameterType="RepairOrderQuery" resultType="RepairOrder">
+        select * from t_repairorder
+        <include refid="whereSql"/>
+    </select>
+    <sql id="whereSql">
+        <where>
+            <if test="keyword != null and keyword != '' ">
+                and name LIKE concat('%',#{keyword},'%')
+            </if>
+        </where>
+    </sql>
+</mapper>

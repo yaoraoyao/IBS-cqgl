@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace:
+必须和Mapper一致，就是说能够超链接过去
+-->
+<mapper namespace="cn.itsource.mapper.PartMapper">
+
+    <insert id="save" parameterType="Part">
+
+        insert into t_part (name,price,num,warnum,context,createtime) VALUES (#{name},#{price},#{num},#{warnum},#{context},#{createtime})
+
+    </insert>
+
+
+    <select id="findAll" resultType="Part">
+        select * from t_part
+    </select>
+
+
+    <select id="findOne" resultType="Part" parameterType="long">
+        select * from t_part where id = #{id}
+    </select>
+
+    <update id="update" parameterType="Part">
+
+        UPDATE  t_part set name=#{name},price=#{price},num=#{num},warnum=#{warnum},context=#{context},createtime=#{createtime}
+        where id = #{id}
+
+    </update>
+
+
+    <!-- void delete(Serializable id);-->
+    <delete id="delete" parameterType="long">
+        DELETE from t_part where id=#{id}
+    </delete>
+
+    <select id="query" parameterType="PartQuery" resultType="Part">
+        select * from t_part
+        <include refid="whereSql"/>
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                and  ( name like  concat('%',#{keyword},'%')  or intro like  concat('%',#{keyword},'%') )
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByQuery" resultType="Part" parameterType="PartQuery">
+        select * from t_part a
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                AND a.name LIKE "%"#{keyword}"%" OR a.context LIKE "%"#{keyword}"%"
+            </if>
+            <if test="beginDate!=null">
+                AND a.createtime&gt;= #{beginDate}
+            </if>
+            <if test="endDate!=null">
+                AND a.createtime &lt;= #{endDate}
+            </if>
+        </where>
+        /*条件.....*/
+    </select>
+
+</mapper>

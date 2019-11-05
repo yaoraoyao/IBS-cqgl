@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间-->
+<mapper namespace="cn.itsource.mapper.SettedBillMapper">
+    <!--查询所有-->
+    <select id="findAll" resultType="SettedBill">
+        SELECT * FROM t_settedbill
+    </select>
+    <!--关联查询:查询支付方式-->
+    <select id="findByWay" resultType="SettedBill" parameterType="long">
+        SELECT s.*,p.way FROM t_settedbill s LEFT JOIN t_payway p ON s.way = p.id
+    </select>
+    <!--通过id查询一条-->
+    <select id="findOne" parameterType="long" resultType="SettedBill">
+        SELECT * FROM t_settedbill WHERE id=#{id}
+    </select>
+    <!--通过状态查询一条-->
+    <select id="findByStatus" parameterType="int" resultType="SettedBill">
+        SELECT * FROM t_settedbill WHERE status=#{status}
+    </select>
+    <!--添加-->
+    <insert id="save" parameterType="SettedBill">
+        INSERT INTO t_settedbill (customer,mainid,settedtime,reAmount,payAmount,address,way)
+            VALUES (#{customer},#{mainId},#{settedtime},#{reAmount},#{payAmount},#{address},#{way})
+    </insert>
+
+    <!--删除-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_settedbill WHERE id=#{id}
+    </delete>
+
+    <!--编辑-->
+    <update id="update" parameterType="SettedBill">
+        UPDATE t_settedbill SET payAmount=#{payAmount},way=#{way},address=#{address} WHERE id=#{id}
+    </update>
+
+
+    <!--通过条件查询-->
+    <select id="query" parameterType="SettedBill" resultType="SettedBill">
+        SELECT * FROM t_settedbill
+        <include refid="wheresql"/>
+    </select>
+    <sql id="wheresql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                AND (name LIKE concat('%',#{keyword},'%'))
+            </if>
+        </where>
+    </sql>
+
+</mapper>

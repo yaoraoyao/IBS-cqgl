@@ -1,0 +1,39 @@
+.job-table {
+	border: 1px solid #dcdcdc;
+	margin-top: 10px;
+	padding: 30px 30px 30px 30px;
+}
+
+#paging {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+#footer-link {
+	background-color: #f1f1f1;
+	height: 74px;
+	line-height: 74px;
+	border: 1px solid #dcdcdc;
+}
+
+.out-border-left {
+	margin-left: 30px;
+}
+
+.margin-top-bottom {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.footer-common {
+	background-color: #434343;
+	border-top: 5px solid #848484;
+	padding-top: 30px;
+	text-align: center;
+	color: white;
+}
+
+.nav-next-element {
+	margin-top: 60px;
+	margin-bottom: 60px;
+}

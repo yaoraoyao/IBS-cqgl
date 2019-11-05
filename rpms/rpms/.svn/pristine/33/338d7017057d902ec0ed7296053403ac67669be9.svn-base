@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间-->
+<mapper namespace="cn.itsource.mapper.RoleMapper">
+    <!--List<t_Role> findAll();-->
+    <select id="findAll" resultType="Role">
+        SELECT * FROM t_role
+    </select>
+
+  <!--  t_Role findOne(Long id);-->
+    <select id="findOne" parameterType="long" resultType="Role">
+        SELECT * FROM t_role WHERE id=#{id}
+    </select>
+
+    <!--void save(t_Role t_Role);-->
+    <insert id="save" parameterType="Role">
+      INSERT INTO t_role (name,sn,permission_id) VALUES (#{name},#{sn},#{permission_id})
+    </insert>
+
+    <!--void delete(Long id);-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_role WHERE id=#{id}
+    </delete>
+
+    <!--void update(t_Role t_Role);-->
+    <update id="update" parameterType="Role">
+       UPDATE t_role SET name=#{name} ,sn=#{sn} ,permission_id=#{permission_id}  WHERE id=#{id}
+    </update>
+
+
+    <!--/*不分页查询*/
+    List<t_Role> query(t_RoleQuery t_RoleQuery);-->
+    <select id="query" parameterType="RoleQuery" resultType="Role">
+        SELECT * FROM t_role
+        <include refid="wheresql"/>
+    </select>
+    <sql id="wheresql">
+        <where>
+          <if test="keyword!=null and keyword!=''">
+             AND (name LIKE concat('%',#{keyword},'%'))
+          </if>
+        </where>
+    </sql>
+
+
+
+
+</mapper>

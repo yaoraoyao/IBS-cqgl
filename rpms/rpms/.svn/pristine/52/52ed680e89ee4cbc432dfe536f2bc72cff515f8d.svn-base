@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间-->
+<mapper namespace="cn.itsource.mapper.EmployeeMapper">
+    <!--List<t_employee> findAll();-->
+    <select id="findAll" resultType="Employee">
+        SELECT * FROM t_employee
+    </select>
+
+  <!--  t_employee findOne(Long id);-->
+    <select id="findOne" parameterType="long" resultType="Employee">
+        SELECT * FROM t_employee WHERE id=#{id}
+    </select>
+
+  <!--  t_employee findByName(String name);-->
+    <select id="findByName" parameterType="string" resultType="Employee">
+        SELECT * FROM t_employee WHERE username=#{username}
+    </select>
+
+    <!--void save(t_employee t_employee);-->
+    <insert id="save" parameterType="Employee">
+      INSERT INTO t_employee (username,password,age,email,Hiredate,departmentId) VALUES (#{username},#{password},#{age},#{email},#{hiredate},#{departmentId})
+    </insert>
+
+    <!--void delete(Long id);-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_employee WHERE id=#{id}
+    </delete>
+
+    <!--void update(t_employee t_employee);-->
+    <update id="update" parameterType="Employee">
+       UPDATE t_employee SET username=#{username} age=#{age}  WHERE id=#{id}
+    </update>
+
+
+    <!--/*不分页查询*/
+    List<t_employee> query(t_employeeQuery t_employeeQuery);-->
+    <select id="query" parameterType="Employee" resultType="Employee">
+        SELECT * FROM t_employee
+        <include refid="wheresql"/>
+
+    </select>
+    <sql id="wheresql">
+        <where>
+          <if test="keyword!=null and key!=''">
+             AND (username LIKE concat('%',#{keyword},'%'))
+          </if>
+        </where>
+    </sql>
+
+
+</mapper>
